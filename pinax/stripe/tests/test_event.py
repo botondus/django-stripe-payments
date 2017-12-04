@@ -37,6 +37,8 @@ class TestEventMethods(TestCase):
                     "account_balance": 0,
                     "active_card": None,
                     "created": 1363911708,
+                    "currency": None,
+                    "default_source": None,
                     "delinquent": False,
                     "description": None,
                     "discount": None,
@@ -44,7 +46,12 @@ class TestEventMethods(TestCase):
                     "id": "cus_xxxxxxxxxxxxxxx",
                     "livemode": True,
                     "object": "customer",
-                    "subscription": None
+                    "sources": {
+                        "data": [],
+                    },
+                    "subscriptions": {
+                        "data": [],
+                    },
                 }
             },
             "id": "evt_xxxxxxxxxxxxx",
@@ -60,8 +67,11 @@ class TestEventMethods(TestCase):
             webhook_message=msg,
             validated_message=msg
         )
+        self.assertIsNone(self.customer.account_balance)
         customers.link_customer(event)
         self.assertEquals(event.customer, self.customer)
+        self.customer.refresh_from_db()
+        self.assertEquals(self.customer.account_balance, 0)
 
     def test_link_customer_customer_updated(self):
         msg = {
@@ -89,6 +99,8 @@ class TestEventMethods(TestCase):
                         "type": "MasterCard"
                     },
                     "created": 1346855596,
+                    "currency": None,
+                    "default_source": None,
                     "delinquent": False,
                     "description": None,
                     "discount": None,
@@ -96,7 +108,12 @@ class TestEventMethods(TestCase):
                     "id": "cus_xxxxxxxxxxxxxxx",
                     "livemode": True,
                     "object": "customer",
-                    "subscription": None
+                    "sources": {
+                        "data": [],
+                    },
+                    "subscriptions": {
+                        "data": [],
+                    },
                 },
                 "previous_attributes": {
                     "active_card": None
@@ -126,6 +143,8 @@ class TestEventMethods(TestCase):
                     "account_balance": 0,
                     "active_card": None,
                     "created": 1348286302,
+                    "currency": None,
+                    "default_source": None,
                     "delinquent": False,
                     "description": None,
                     "discount": None,
@@ -133,7 +152,12 @@ class TestEventMethods(TestCase):
                     "id": "cus_xxxxxxxxxxxxxxx",
                     "livemode": True,
                     "object": "customer",
-                    "subscription": None
+                    "sources": {
+                        "data": [],
+                    },
+                    "subscriptions": {
+                        "data": [],
+                    },
                 }
             },
             "id": "evt_xxxxxxxxxxxxx",
@@ -163,6 +187,8 @@ class TestEventMethods(TestCase):
                     "account_balance": 0,
                     "active_card": None,
                     "created": 1348286302,
+                    "currency": None,
+                    "default_source": None,
                     "delinquent": False,
                     "description": None,
                     "discount": None,
@@ -170,7 +196,12 @@ class TestEventMethods(TestCase):
                     "id": "cus_xxxxxxxxxxxxxxx",
                     "livemode": True,
                     "object": "customer",
-                    "subscription": None
+                    "sources": {
+                        "data": [],
+                    },
+                    "subscriptions": {
+                        "data": [],
+                    }
                 }
             },
             "id": "evt_xxxxxxxxxxxxx",

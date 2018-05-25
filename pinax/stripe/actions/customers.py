@@ -52,10 +52,12 @@ def create(user, card=None, plan=settings.PINAX_STRIPE_DEFAULT_PLAN, charge_imme
         trial_end=trial_end
     )
     try:
-        cus = models.Customer.objects.create(
-            user=user,
-            stripe_id=stripe_customer["id"]
-        )
+        # wrap in a transaction to keep tests happy
+        with transaction.atomic():
+            cus = models.Customer.objects.create(
+                user=user,
+                stripe_id=stripe_customer["id"]
+            )
     except IntegrityError:
         # There is already a Customer object for this user
         stripe.Customer.retrieve(stripe_customer["id"]).delete()
@@ -119,11 +121,10 @@ def link_customer(event):
         cus_id = event_data_object["id"]
     else:
         cus_id = event_data_object.get("customer", None)
-
     if cus_id is not None:
         customer, created = models.Customer.objects.get_or_create(
             stripe_id=cus_id,
-            stripe_account=event.stripe_account,
+            stripe_account=event.stripe_account
         )
         if event.kind in customer_crud_events:
             sync_customer(customer, event_data_object)

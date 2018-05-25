@@ -278,9 +278,9 @@ class CustomersTests(TestCase):
     def test_link_customer_does_not_exist_connected(self, SyncMock):
         message = dict(data=dict(object=dict(id="cu_123")))
         account = Account.objects.create(stripe_id="acc_XXX")
-        event = Event.objects.create(stripe_id="evt_1", validated_message=message, kind="customer.created", stripe_account=account)
+        event = Event.objects.create(stripe_id="evt_1", validated_message=message, kind="customer.created", stripe_account=account.stripe_id)
         customers.link_customer(event)
-        Customer.objects.get(stripe_id="cu_123", stripe_account=account)
+        Customer.objects.get(stripe_id="cu_123", stripe_account=account.stripe_id)
         self.assertTrue(SyncMock.called)
 
 

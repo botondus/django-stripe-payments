@@ -164,5 +164,7 @@ def sync_customer(customer, cu=None):
     customer.save()
     for source in cu["sources"]["data"]:
         sources.sync_payment_source_from_stripe_data(customer, source)
-    for subscription in cu["subscriptions"]["data"]:
-        subscriptions.sync_subscription_from_stripe_data(customer, subscription)
+    # Luke: at some stage, subscription data was no longer returned, not to mention
+    # that we do not need it at Poparide
+    # for subscription in cu["subscriptions"]["data"]:
+        # subscriptions.sync_subscription_from_stripe_data(customer, subscription)

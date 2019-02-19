@@ -6,7 +6,6 @@ import stripe
 
 from . import invoices
 from . import sources
-from . import subscriptions
 from ..conf import settings
 from .. import hooks
 from .. import models

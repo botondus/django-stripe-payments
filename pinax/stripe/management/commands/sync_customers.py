@@ -62,9 +62,9 @@ def _sync_customers():
                 customer_obj, obj
             )
         except Plan.DoesNotExist:
-            print 'Plan subscribed to by customer {} not found, skipping customer.'.format(
+            print('Plan subscribed to by customer {} not found, skipping customer.'.format(
                 customer_obj.stripe_id
-            )
+            ))
 
         synced += 1
         username = getattr(

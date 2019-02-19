@@ -15,15 +15,21 @@ def add_event(stripe_id, kind, livemode, message, api_version="", request_id="",
         request_id: the id of the request that initiated the webhook
         pending_webhooks: the number of pending webhooks
     """
-    event = models.Event.objects.create(
+    event, created = models.Event.objects.get_or_create(
         stripe_id=stripe_id,
-        kind=kind,
-        livemode=livemode,
-        webhook_message=message,
-        api_version=api_version,
-        request=request_id,
-        pending_webhooks=pending_webhooks
+        defaults=dict(
+            kind=kind,
+            livemode=livemode,
+            webhook_message=message,
+            api_version=api_version,
+            request=request_id,
+            pending_webhooks=pending_webhooks
+        )
     )
+    if not created:
+        # another worker somehow got here first; do not process
+        # the event again
+        return
     WebhookClass = registry.get(kind)
     if WebhookClass is not None:
         webhook = WebhookClass(event)

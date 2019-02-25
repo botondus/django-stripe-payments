@@ -39,12 +39,11 @@ def sync_account_from_stripe_data(data, user=None):
     Returns:
         a pinax.stripe.models.Account object
     """
-    kwargs = {'stripe_id': data['id']}
-    if user:
-        kwargs['user'] = user
     obj, created = models.Account.objects.get_or_create(
-        **kwargs
+        stripe_id=data['id']
     )
+    if user:
+        obj.user = user
 
     common_attrs = (
         'business_name', 'business_url', 'charges_enabled', 'country',

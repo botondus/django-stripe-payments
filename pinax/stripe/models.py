@@ -5,6 +5,7 @@ import decimal
 from django.db import models
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.six import text_type
 
 import stripe
 
@@ -174,7 +175,7 @@ class Customer(AccountRelatedStripeObject):
         )
 
     def __str__(self):
-        return unicode(self.user)
+        return text_type("{}").format(self.user)
 
 
 class Card(StripeObject):

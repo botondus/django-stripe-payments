@@ -116,8 +116,10 @@ def sync_payment_source_from_stripe_data(customer, source):
     """
     if source["id"].startswith("card_"):
         return sync_card(customer, source)
-    else:
-        return sync_bitcoin(customer, source)
+    # Luke 2019-03-08: don't bother sync'ing sources - Pinax Stripe has no database
+    # model for Source and we are not dependent on it anyway
+    # else:
+    #     return sync_bitcoin(customer, source)
 
 
 def update_card(customer, source, name=None, exp_month=None, exp_year=None):

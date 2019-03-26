@@ -161,7 +161,12 @@ def sync_customer(customer, cu=None):
     customer.delinquent = cu["delinquent"]
     customer.default_source = cu["default_source"] or ""
     customer.save()
-    for source in cu["sources"]["data"]:
+    # Luke: as of 2019-03-26 upon deploying our payment changes, we get a
+    # `customer.created` webhook, then fetch the customer which has an
+    # empty `sources` dict, so we need to protect this somewhat.
+    # This is likely a timing issue since we create the customer now well
+    # before we create a source, potentially.
+    for source in cu["sources"].get("data", []):
         sources.sync_payment_source_from_stripe_data(customer, source)
     # Luke: at some stage, subscription data was no longer returned, not to mention
     # that we do not need it at Poparide

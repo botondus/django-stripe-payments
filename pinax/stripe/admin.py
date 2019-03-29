@@ -166,7 +166,7 @@ admin.site.register(
         "created_at"
     ],
     list_filter=[
-        "kind",
+        # "kind",
         "created_at",
         "valid",
         "processed"
@@ -174,7 +174,7 @@ admin.site.register(
     search_fields=[
         "stripe_id",
         "customer__stripe_id",
-        "validated_message"
+        # "validated_message"
     ] + customer_search_fields(),
 )
 

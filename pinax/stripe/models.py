@@ -4,8 +4,6 @@ import decimal
 
 from django.db import models
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
-from django.utils.six import text_type
 
 import stripe
 
@@ -33,7 +31,6 @@ class AccountRelatedStripeObject(StripeObject):
         abstract = True
 
 
-@python_2_unicode_compatible
 class Plan(AccountRelatedStripeObject):
     amount = models.DecimalField(decimal_places=2, max_digits=9)
     currency = models.CharField(max_length=15)
@@ -48,7 +45,6 @@ class Plan(AccountRelatedStripeObject):
         return "{} ({}{})".format(self.name, CURRENCY_SYMBOLS.get(self.currency, ""), self.amount)
 
 
-@python_2_unicode_compatible
 class Coupon(StripeObject):
 
     amount_off = models.DecimalField(decimal_places=2, max_digits=9, null=True)
@@ -72,7 +68,6 @@ class Coupon(StripeObject):
         return "Coupon for {}, {}".format(description, self.duration)
 
 
-@python_2_unicode_compatible
 class EventProcessingException(models.Model):
 
     event = models.ForeignKey("Event", null=True, on_delete=models.CASCADE)
@@ -85,7 +80,6 @@ class EventProcessingException(models.Model):
         return "<{}, pk={}, Event={}>".format(self.message, self.pk, self.event)
 
 
-@python_2_unicode_compatible
 class Event(AccountRelatedStripeObject):
 
     kind = models.CharField(max_length=250)
@@ -155,7 +149,6 @@ class TransferChargeFee(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
 
-@python_2_unicode_compatible
 class Customer(AccountRelatedStripeObject):
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
@@ -175,7 +168,7 @@ class Customer(AccountRelatedStripeObject):
         )
 
     def __str__(self):
-        return text_type("{}").format(self.user)
+        return "{}".format(self.user)
 
 
 class Card(StripeObject):
@@ -368,7 +361,7 @@ class Charge(StripeObject):
 
 class Account(StripeObject):
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
 
     business_name = models.TextField(blank=True, null=True)
     business_url = models.TextField(blank=True, null=True)
@@ -438,7 +431,7 @@ class Account(StripeObject):
 
 class BankAccount(StripeObject):
 
-    account = models.ForeignKey(Account, related_name='bank_accounts')
+    account = models.ForeignKey(Account, related_name='bank_accounts', on_delete=models.CASCADE)
     account_holder_name = models.TextField()
     account_holder_type = models.TextField()
     bank_name = models.TextField(null=True, blank=True)

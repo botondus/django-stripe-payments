@@ -259,6 +259,11 @@ class ChargeDisputeUpdatedWebhook(ChargeDisputeWebhook):
     description = "Occurs when the dispute is updated (usually with evidence)."
 
 
+class RadarEarlyFraudWarningCreatedWebhook(Webhook):
+    name = "radar.early_fraud_warning.created"
+    description = "Occurs whenever Stripe is told by a bank that a charge may result in a chargeback."
+
+
 class CouponCreatedWebhook(Webhook):
     name = "coupon.created"
     description = "Occurs whenever a coupon is created."

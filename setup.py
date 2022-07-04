@@ -85,7 +85,7 @@ setup(
         "django-appconf>=1.0.1",
         # including this in Poparide's base requirements
         # "jsonfield>=1.0.3",
-        "stripe==1.80.0",
+        "stripe>=1.80.0",
         "django>=1.7",
         "pytz",
         "six",

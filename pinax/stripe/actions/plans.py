@@ -8,10 +8,7 @@ def sync_plans():
     """
     Syncronizes all plans from the Stripe API
     """
-    try:
-        plans = stripe.Plan.auto_paging_iter()
-    except AttributeError:
-        plans = iter(stripe.Plan.all().data)
+    plans = stripe.Plan.auto_paging_iter()
 
     for plan in plans:
         defaults = dict(

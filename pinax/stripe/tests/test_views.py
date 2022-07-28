@@ -130,7 +130,7 @@ class PaymentMethodCreateViewTests(TestCase):
 
     @patch("pinax.stripe.actions.sources.create_card")
     def test_post_on_error(self, CreateMock):
-        CreateMock.side_effect = stripe.CardError("Bad card", "Param", "CODE")
+        CreateMock.side_effect = stripe.error.CardError("Bad card", "Param", "CODE")
         self.client.login(username=self.user.username, password=self.password)
         response = self.client.post(
             reverse("pinax_stripe_payment_method_create"),
@@ -178,7 +178,7 @@ class PaymentMethodDeleteViewTests(TestCase):
 
     @patch("pinax.stripe.actions.sources.delete_card")
     def test_post_on_error(self, CreateMock):
-        CreateMock.side_effect = stripe.CardError("Bad card", "Param", "CODE")
+        CreateMock.side_effect = stripe.error.CardError("Bad card", "Param", "CODE")
         self.client.login(username=self.user.username, password=self.password)
         response = self.client.post(
             reverse("pinax_stripe_payment_method_delete", args=[self.card.pk]),
@@ -242,7 +242,7 @@ class PaymentMethodUpdateViewTests(TestCase):
 
     @patch("pinax.stripe.actions.sources.update_card")
     def test_post_on_error(self, CreateMock):
-        CreateMock.side_effect = stripe.CardError("Bad card", "Param", "CODE")
+        CreateMock.side_effect = stripe.error.CardError("Bad card", "Param", "CODE")
         self.client.login(username=self.user.username, password=self.password)
         response = self.client.post(
             reverse("pinax_stripe_payment_method_update", args=[self.card.pk]),
@@ -347,7 +347,7 @@ class SubscriptionCreateViewTests(TestCase):
             stripe_id="cus_1",
             user=self.user
         )
-        CreateMock.side_effect = stripe.StripeError("Bad Mojo", "Param", "CODE")
+        CreateMock.side_effect = stripe.error.StripeError("Bad Mojo", "Param", "CODE")
         self.client.login(username=self.user.username, password=self.password)
         response = self.client.post(
             reverse("pinax_stripe_subscription_create"),
@@ -400,7 +400,7 @@ class SubscriptionDeleteViewTests(TestCase):
 
     @patch("pinax.stripe.actions.subscriptions.cancel")
     def test_post_on_error(self, CancelMock):
-        CancelMock.side_effect = stripe.StripeError("Bad Foo", "Param", "CODE")
+        CancelMock.side_effect = stripe.error.StripeError("Bad Foo", "Param", "CODE")
         self.client.login(username=self.user.username, password=self.password)
         response = self.client.post(
             reverse("pinax_stripe_subscription_delete", args=[self.subscription.pk]),
@@ -474,7 +474,7 @@ class SubscriptionUpdateViewTests(TestCase):
 
     @patch("pinax.stripe.actions.subscriptions.update")
     def test_post_on_error(self, UpdateMock):
-        UpdateMock.side_effect = stripe.StripeError("Bad Foo", "Param", "CODE")
+        UpdateMock.side_effect = stripe.error.StripeError("Bad Foo", "Param", "CODE")
         self.client.login(username=self.user.username, password=self.password)
         response = self.client.post(
             reverse("pinax_stripe_subscription_update", args=[self.subscription.pk]),

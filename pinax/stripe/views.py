@@ -46,7 +46,7 @@ class PaymentMethodCreateView(LoginRequiredMixin, CustomerMixin, PaymentsContext
         try:
             self.create_card(request.POST.get("stripeToken"))
             return redirect("pinax_stripe_payment_method_list")
-        except stripe.CardError as e:
+        except stripe.error.CardError as e:
             return self.render_to_response(self.get_context_data(errors=smart_str(e)))
 
 
@@ -62,7 +62,7 @@ class PaymentMethodDeleteView(LoginRequiredMixin, CustomerMixin, DetailView):
         try:
             self.delete_card(self.object.stripe_id)
             return redirect("pinax_stripe_payment_method_list")
-        except stripe.CardError as e:
+        except stripe.error.CardError as e:
             return self.render_to_response(self.get_context_data(errors=smart_str(e)))
 
 
@@ -78,7 +78,7 @@ class PaymentMethodUpdateView(LoginRequiredMixin, CustomerMixin, PaymentsContext
         try:
             self.update_card(form.cleaned_data["expMonth"], form.cleaned_data["expYear"])
             return redirect("pinax_stripe_payment_method_list")
-        except stripe.CardError as e:
+        except stripe.error.CardError as e:
             return self.render_to_response(self.get_context_data(errors=smart_str(e)))
 
     def post(self, request, *args, **kwargs):
@@ -119,7 +119,7 @@ class SubscriptionCreateView(LoginRequiredMixin, PaymentsContextMixin, CustomerM
         try:
             self.subscribe(self.customer, plan=form.cleaned_data["plan"], token=self.request.POST.get("stripeToken"))
             return redirect("pinax_stripe_subscription_list")
-        except stripe.StripeError as e:
+        except stripe.error.StripeError as e:
             return self.render_to_response(self.get_context_data(form=form, errors=smart_str(e)))
 
 
@@ -135,7 +135,7 @@ class SubscriptionDeleteView(LoginRequiredMixin, CustomerMixin, DetailView):
         try:
             self.cancel()
             return redirect("pinax_stripe_subscription_list")
-        except stripe.StripeError as e:
+        except stripe.error.StripeError as e:
             return self.render_to_response(self.get_context_data(errors=smart_str(e)))
 
 
@@ -171,7 +171,7 @@ class SubscriptionUpdateView(LoginRequiredMixin, CustomerMixin, FormMixin, Detai
         try:
             self.update_subscription(form.cleaned_data["plan"])
             return redirect("pinax_stripe_subscription_list")
-        except stripe.StripeError as e:
+        except stripe.error.StripeError as e:
             return self.render_to_response(self.get_context_data(form=form, errors=smart_str(e)))
 
     def post(self, request, *args, **kwargs):
